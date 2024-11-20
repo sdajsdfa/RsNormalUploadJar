@@ -1,11 +1,39 @@
 
 import router from '@ohos.router'
-import { relationalStore } from '@kit.ArkData'
-import { common } from '@kit.AbilityKit'
+import TaskInfo from '../viewModel/TaskInfo'
+import { CustomDialogExample } from './CustomDialogSelect'
+import DbUtil from '../common/utils/DbUtil'
+import ServerInfo from '../viewModel/ServerInfo'
+import Data from '../viewModel/Data'
+
+
+
 
 @Entry
 @Component
 export struct TitleBar {
+
+  // @State res: TaskInfo[] = []
+  @State res: ServerInfo[] = []
+  @State selectList: Array<SelectOption> = []
+  @State selectServer: Array<SelectOption> = []
+
+  //自定义弹框
+  dialog: CustomDialogController = new CustomDialogController({
+    builder: CustomDialogExample({
+      // taskInfo : this.res,
+      serverInfo : this.res,
+      selectList : this.selectList,
+      selectServer : this.selectServer,
+       text : this.res[0].province,
+      textServer :  this.res[0].regionName
+    }),
+    //设置弹框显示方向：在底部，默认居中显示
+    alignment: DialogAlignment.Center,
+    //点击外部不取消
+    autoCancel: false,
+  })
+
   private title: string = ''
 
   build() {
@@ -50,43 +78,22 @@ export struct TitleBar {
         Button("选择").type(ButtonType.Normal).borderRadius(10).backgroundColor('#5b73de')
           .width(80)
           .height(30)
-          .margin(125)
-          .onClick(async ()=>{
-            const context = getContext() as common.UIAbilityContext
-            const STORE_CONFIG :relationalStore.StoreConfig= {
-              name: 'MyApplication.db', // 数据库文件名
-              securityLevel: relationalStore.SecurityLevel.S3, // 数据库安全级别
-              encrypt: false, // 可选参数，指定数据库是否加密，默认不加密
-              //customDir: 'customDir/subCustomDir', // 可选参数，数据库自定义路径。数据库将在如下的目录结构中被创建：context.databaseDir + '/rdb/' + customDir，其中context.databaseDir是应用沙箱对应的路径，'/rdb/'表示创建的是关系型数据库，customDir表示自定义的路径。当此参数不填时，默认在本应用沙箱目录下创建RdbStore实例。
-              //isReadOnly: false // 可选参数，指定数据库是否以只读方式打开。该参数默认为false，表示数据库可读可写。该参数为true时，只允许从数据库读取数据，不允许对数据库进行写操作，否则会返回错误码801。
-            };
-            relationalStore.getRdbStore(context, STORE_CONFIG, (err,store) =>{
-              if(err){
-                console.log('数据初始化失败')
-                return
+          .margin(140)
+          .onClick(()=>{
+            // DbUtil.batchInsert('server',)
+            let hashSet = new Array<string>();
+            this.res = DbUtil.getTaskList()
+            for(let i = 0; i<this.res.length;i++){
+              if(this.res[0].province==this.res[i].province){
+                this.selectServer.push(new Data(this.res[i].regionName))
               }
-              console.log('数据库连接成功')
-            })
-
-            // let db=await relationalStore.getRdbStore(getContext(), {
-            //   name: 'MyApplication.db',//数据库文件名
-            //   securityLevel: relationalStore.SecurityLevel.S1
-            // })
-            // console.log("123",db.version)
-            // if(db.version===0)//判断数据库是否为初始化数据库
-            // {
-            //   /*注意INT类型是不能自增的,TEXT普通边长文本,*/
-            //   let sql="CREATE TABLE biao_1(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT)"
-            //   db.executeSql(sql)
-            //   db.version=1
-            // }else if(db.version===1)
-            // {
-            //   console.log("没有创建表")
-            // }
-            // let fid=db.insertSync('biao_1',{//写入成功后会返回写入id
-            //   id:1,
-            //   name:"老王"
-            // })
+              hashSet.push(this.res[i].province)
+            }
+            hashSet = Array.from(new Set(hashSet))
+            for(let i = 0; i<hashSet.length;i++){
+              this.selectList.push(new Data(hashSet[i]))
+            }
+            this.dialog.open();
           })
       }
       .width("95%")
@@ -99,4 +106,6 @@ export struct TitleBar {
     .width("100%")
     .height("100%")
   }
+
+
 }

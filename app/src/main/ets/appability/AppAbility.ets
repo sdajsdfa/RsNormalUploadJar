@@ -1,6 +1,8 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import taskModel from '../model/TaskModel';
+import DbUtil from '../common/utils/DbUtil';
 
 export default class AppAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -11,9 +13,21 @@ export default class AppAbility extends UIAbility {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
   }
 
-  onWindowStageCreate(windowStage: window.WindowStage): void {
+  async onWindowStageCreate(windowStage: window.WindowStage): Promise<void> {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+
+    /**
+     * 设置为全局沉浸
+     */
+    windowStage.getMainWindow().then(window=>{
+      window.setWindowLayoutFullScreen(true)
+    })
+    /**
+     * 初始化数据表
+    //  */
+    // taskModel.initTaskDB(this.context)
+    await DbUtil.initDB(this.context);
 
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {

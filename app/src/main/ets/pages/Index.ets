@@ -5,6 +5,9 @@ import { CustomDialogExample } from './CustomDialogExample'
 @Component
 struct Index {
 
+  // @State topAvoidWeight: number = 0
+  // @State bottomAvoidWeight: number = 0
+
   @State currentIndex: number = 0
 
   //自定义构造器
@@ -27,13 +30,28 @@ struct Index {
     .justifyContent(FlexAlign.Center)
   }
 
-  aboutToAppear(): void {
-    window.getLastWindow(getContext()).then(win=>{
-      win.setWindowLayoutFullScreen(true)  // 开启了当前页面的沉浸式模式（开启全屏模式）
-    })
-  }
+  // onPageShow(): void {
+  //       /**
+  //        * 获取上下的安全区
+  //        */
+  //   window.getLastWindow(getContext())
+  //     .then(win=>{
+  //       //获取顶部安全区高度
+  //       this.topAvoidWeight = px2vp(win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).topRect.height)
+  //       //获取底部安全区高度
+  //       this.bottomAvoidWeight = px2vp(win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).bottomRect.height)
+  //       //存入全局变量
+  //       AppStorage.setOrCreate('topAvoidWeight',this.topAvoidWeight)
+  //       AppStorage.setOrCreate('bottomAvoidWeight',this.bottomAvoidWeight)
+  //     })
+  // }
+  // aboutToAppear(): void {
+  //   window.getLastWindow(getContext()).then(win=>{
+  //     win.setWindowLayoutFullScreen(true)  // 开启了当前页面的沉浸式模式（开启全屏模式）
+  //   })
+  // }
 
-  //
+  //自定义弹框
   dialog: CustomDialogController = new CustomDialogController({
     builder: CustomDialogExample()
   })
