@@ -165,11 +165,20 @@ class DbUtil {
           Logger.error(`${CommonConstants.RDB_PREFIX}`, '删除失败:', JSON.stringify(error));
           reject(error);
         } else {
-          Logger.error(`${CommonConstants.RDB_PREFIX}`, '删除成功,删除行数:', rows.toString());
+          Logger.debug(`${CommonConstants.RDB_PREFIX}`, '删除成功,删除行数:', rows.toString());
           resolve(rows);
         }
       })
     })
+  }
+
+  /**
+   * 删除任务
+   */
+  delTaskById(id: number) {
+    let predicates = new relationalStore.RdbPredicates("server")
+    predicates.equalTo('ID', id)
+    return this.rdbStore?.delete(predicates)
   }
   /**
    * 更新数据
@@ -259,6 +268,35 @@ class DbUtil {
     return tasks;
   }
 
+  getTaskList2(regionName: string): ServerInfo[] {
+    let tasks: ServerInfo[] = []
+    let predicates = new relationalStore.RdbPredicates('server')
+    /*构建查询条件*/
+    predicates.equalTo('regionName',regionName)
+    /*查询数据*/
+    if (this.rdbStore !== undefined) {
+      let result = this.rdbStore.querySync(predicates, ['id', 'serverIp', 'dtuPort','regionName','webIp','webPort','flag','webFlag','province','transferFlag','city','proxyType','mark'])
+      while (!result.isAtLastRow) { /*循环结果集*/
+        result.goToNextRow()
+        let id = result.getLong(result.getColumnIndex('id'))
+        let serverIp = result.getString(result.getColumnIndex('serverIp'))
+        let dtuPort = result.getString(result.getColumnIndex('dtuPort'))
+        let regionName = result.getString(result.getColumnIndex('regionName'))
+        let webIp = result.getString(result.getColumnIndex('webIp'))
+        let webPort = result.getString(result.getColumnIndex('webPort'))
+        let flag = result.getLong(result.getColumnIndex('flag'))
+        let webFlag = result.getLong(result.getColumnIndex('webFlag'))
+        let province = result.getString(result.getColumnIndex('province'))
+        let transferFlag = result.getLong(result.getColumnIndex('transferFlag'))
+        let city = result.getString(result.getColumnIndex('city'))
+        let proxyType = result.getString(result.getColumnIndex('proxyType'))
+        let mark = result.getLong(result.getColumnIndex('mark'))
+        let task = new ServerInfo(id, serverIp,dtuPort,regionName,webIp,webPort,flag,webFlag,province,transferFlag,city,proxyType,mark)
+        tasks.push(task)
+      }
+    }
+    return tasks;
+  }
   /**
    * 查询数据
    * @param predicates

@@ -2,6 +2,7 @@ import TaskInfo from "../viewModel/TaskInfo"
 import ServerInfo from "../viewModel/ServerInfo"
 import DbUtil from "../common/utils/DbUtil";
 import Data from '../viewModel/Data'
+import { relationalStore } from "@kit.ArkData";
 
 // 定义自定义弹框
 @CustomDialog
@@ -29,6 +30,9 @@ export struct CustomDialogExample {
   controll: CustomDialogController = new CustomDialogController({
     builder: CustomDialogExample({})
   })
+
+  onClickOk :(value:string,serverIp:string,dtuPort:string)=>void = ()=>{}
+
   build() {
     Column(){
       Row(){
@@ -99,7 +103,12 @@ export struct CustomDialogExample {
       .width("100%")
       Row(){
         Text("确定").fontColor(Color.Blue).fontSize(20).padding({left:60})
-          .onClick(() => { this.controll.close() })
+          .onClick(() => {
+            // console.log("",this.textServer)
+            let s =DbUtil.getTaskList2(this.textServer)
+            this.onClickOk(this.textServer,s[0].serverIp,s[0].dtuPort)
+            this.controll.close()
+          })
         Text("取消").fontColor(Color.Blue).fontSize(20).padding({left:150})
           .onClick(() => { this.controll.close() })
       }
