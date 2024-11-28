@@ -3,20 +3,24 @@ import ServerInfo from "../viewModel/ServerInfo"
 import DbUtil from "../common/utils/DbUtil";
 import Data from '../viewModel/Data'
 import { relationalStore } from "@kit.ArkData";
+import { CustomDialogLogin } from "./CustomDialogLogin";
+import socket from '@ohos.net.socket';
 
 // 定义自定义弹框
+
 @CustomDialog
-export struct CustomDialogExample {
+export struct CustomDialogSelect {
   //@State isChecked1: boolean = true; // 第一个Toggle的初始状态
   //@State isChecked2: boolean = false; // 第二个Toggle的初始状态
   //@State taskInfo: TaskInfo[] = [];
-
   @State serverInfo: ServerInfo[] = [];
 
   // 地区列表
   @State selectList: Array<SelectOption> = []
   // 服务器列表
   @State selectServer: Array<SelectOption> = []
+
+  @State server: ServerInfo[] = []
 
 
   @State text: string = ""
@@ -27,8 +31,18 @@ export struct CustomDialogExample {
   @State textServer: string = ""
   @State arrowPosition: ArrowPosition = ArrowPosition.END
 
-  controll: CustomDialogController = new CustomDialogController({
-    builder: CustomDialogExample({})
+  customDialogLogin: CustomDialogController = new CustomDialogController({
+    builder: CustomDialogLogin({
+      server: this.server
+    }),
+    //设置弹框显示方向：在底部，默认居中显示
+    alignment: DialogAlignment.Center,
+    //点击外部不取消
+    autoCancel: true,
+  });
+
+  controller: CustomDialogController = new CustomDialogController({
+    builder: CustomDialogSelect({}),
   })
 
   onClickOk :(value:string,serverIp:string,dtuPort:string)=>void = ()=>{}
@@ -37,8 +51,9 @@ export struct CustomDialogExample {
     Column(){
       Row(){
         Text('选择服务器')
-          .padding({left:20})
+          .padding({left:20,right:210})
           .fontColor('#FFFFFF')
+        Image($r('app.media.magnifyingglass')).width(20)
       }
       .width("100%")
       .height(50)
@@ -105,12 +120,42 @@ export struct CustomDialogExample {
         Text("确定").fontColor(Color.Blue).fontSize(20).padding({left:60})
           .onClick(() => {
             // console.log("",this.textServer)
-            let s =DbUtil.getTaskList2(this.textServer)
-            this.onClickOk(this.textServer,s[0].serverIp,s[0].dtuPort)
-            this.controll.close()
+            this.server =DbUtil.getTaskList2(this.textServer)
+
+            this.controller.close()
+            if(this.server[0].transferFlag==3){
+              this.customDialogLogin.open();
+            } else {
+              let udp = socket.constructUDPSocketInstance();
+              udp.bind({address: "0.0.0.0", port: Number(this.server[0].dtuPort), family: 1}).then(() => {
+                console.log('bind success');
+              }).catch(() => {
+                console.log('bind fail');
+              });
+              //收到消息时的处理
+              udp.on("message", async (value) => {
+                console.log("12312",value)
+                // let msg = buf2String(value.message)
+                // let remoteIP = value.remoteInfo.address
+                // let remotePort = value.remoteInfo.port.toString()
+                // //对端ip地址和端口的字符串形式
+                // let remoteAddr = "[" + remoteIP + ":" + remotePort + "]:"
+                // let time = await getCurrentTimeString()
+                // this.msgHistory += remoteAddr + msg + time + "\r\n"
+                // this.scroller.scrollEdge(Edge.Bottom)
+              })
+
+              udp.send({data: 'Hello, server!', address: {address: this.server[0].serverIp, port: Number(this.server[0].dtuPort), family: 1}}).then(() => {
+                console.log('send success');
+              }).catch(() => {
+                console.log('send fail');
+              });
+
+              this.onClickOk(this.server[0].regionName,this.server[0].serverIp,this.server[0].dtuPort)
+            }
           })
         Text("取消").fontColor(Color.Blue).fontSize(20).padding({left:150})
-          .onClick(() => { this.controll.close() })
+          .onClick(() => { this.controller.close() })
       }
       .padding({top:20})
       .width("100%")

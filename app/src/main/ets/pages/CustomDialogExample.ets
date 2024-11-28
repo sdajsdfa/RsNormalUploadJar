@@ -4,7 +4,7 @@ export struct CustomDialogExample {
   //@State isChecked1: boolean = true; // 第一个Toggle的初始状态
   //@State isChecked2: boolean = false; // 第二个Toggle的初始状态
 
-  controll: CustomDialogController = new CustomDialogController({
+  controller: CustomDialogController = new CustomDialogController({
     builder: CustomDialogExample({})
   })
 
@@ -46,10 +46,10 @@ export struct CustomDialogExample {
       .padding({ left: 20, right: 20 ,top:30})
 
       Row(){
-        Text('取消').fontColor(Color.Blue).width("100%").textAlign(TextAlign.Center)
-          .onClick(() => { this.controll.close() })
+        Text('取消').fontColor(Color.Blue).width("100%").textAlign(TextAlign.Center).fontSize(20)
+          .onClick(() => { this.controller.close() })
       }
-      .padding({ top:390})
+      .padding({ top:430})
     }
     .width("100%")
     .height("90%")

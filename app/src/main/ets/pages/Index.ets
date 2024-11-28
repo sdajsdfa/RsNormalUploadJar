@@ -120,7 +120,7 @@ struct Index {
                   Text("服务器配置")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 232,right:10})
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 262,right:10})
                 }
                 .padding({ left: 10, right: 10 })
                 .width("100%")
@@ -139,7 +139,7 @@ struct Index {
                   Text("传输日志")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10,right:10})
                 .width("100%")
@@ -152,7 +152,7 @@ struct Index {
                   Text("工程列表")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -165,7 +165,7 @@ struct Index {
                   Text("接口设置")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -180,7 +180,7 @@ struct Index {
                     .padding({ left: 10})
                   Text("关闭")
                     .fontSize(10)
-                    .margin({ left: 240 })
+                    .margin({ left: 270 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -193,7 +193,7 @@ struct Index {
                   Text("自动上传")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Toggle({type: ToggleType.Switch, isOn: false}).margin({ left: 225 })
+                  Toggle({type: ToggleType.Switch, isOn: false}).margin({ left: 255 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -210,7 +210,7 @@ struct Index {
                     Text("标准版").fontSize(10).margin(10)
                     Image($r('app.media.chevron_right')) .width(10)
                   }
-                  .margin({ left: 195})
+                  .margin({ left: 225})
 
                 }
                 .padding({ left: 10})
@@ -224,7 +224,7 @@ struct Index {
                   Text("使用说明")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -237,7 +237,7 @@ struct Index {
                   Text("清除缓存")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Text("清除后数据不可恢复").fontSize(10).margin({ left: 168 })
+                  Text("清除后数据不可恢复").fontSize(10).margin({ left: 198 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -250,7 +250,7 @@ struct Index {
                   Text("版本检查")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10})
                 .width("100%")
@@ -263,7 +263,7 @@ struct Index {
                   Text("退出程序")
                     .fontSize(14)
                     .padding({ left: 10})
-                  Image($r('app.media.chevron_right')).width(10).margin({ left: 245 })
+                  Image($r('app.media.chevron_right')).width(10).margin({ left: 275 })
                 }
                 .padding({ left: 10})
                 .width("100%")

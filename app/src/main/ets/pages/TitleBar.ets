@@ -1,7 +1,7 @@
 
 import router from '@ohos.router'
 import TaskInfo from '../viewModel/TaskInfo'
-import { CustomDialogExample } from './CustomDialogSelect'
+import { CustomDialogSelect } from './CustomDialogSelect'
 import DbUtil from '../common/utils/DbUtil'
 import ServerInfo from '../viewModel/ServerInfo'
 import Data from '../viewModel/Data'
@@ -32,11 +32,12 @@ export struct TitleBar {
     this.serverIp = serverIp
     this.dtuPort = dtuPort
     this.textInputValue = value
+    console.log("00000",this.textInputValue)
   }
 
   //自定义弹框
   dialog: CustomDialogController = new CustomDialogController({
-    builder: CustomDialogExample({
+    builder: CustomDialogSelect({
       // taskInfo : this.res,
       serverInfo : this.res,
       selectList : this.selectList,
@@ -48,7 +49,7 @@ export struct TitleBar {
     //设置弹框显示方向：在底部，默认居中显示
     alignment: DialogAlignment.Center,
     //点击外部不取消
-    autoCancel: false,
+    autoCancel: true,
   })
 
   //private title: string = ''
@@ -125,6 +126,7 @@ export struct TitleBar {
           Text(this.serverIp+":"+this.dtuPort).fontSize(12).padding({top:10})
         }
         .width("100%")
+        .height(90)
         .padding({top:40})
         .justifyContent(FlexAlign.Center)
         Button("选择").type(ButtonType.Normal).borderRadius(10).backgroundColor('#5b73de')
